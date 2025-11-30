@@ -15,16 +15,17 @@ ipsec-events.rules \
 kerberos-events.rules \
 mdns-events.rules \
 modbus-events.rules \
-mqtt-events.rules \
-nfs-events.rules \
-ntp-events.rules \
-pgsql-events.rules \
-pop3-events.rules \
-quic-events.rules \
-rfb-events.rules \
-smb-events.rules \
-smtp-events.rules \
-ssh-events.rules \
-stream-events.rules \
-tls-events.rules \
-websocket-events.rules
+ mqtt-events.rules \
+ nfs-events.rules \
+ ntp-events.rules \
+ pgsql-events.rules \
+ pop3-events.rules \
+ quic-events.rules \
+ rfb-events.rules \
+ smb-events.rules \
+ smtp-events.rules \
+ ssh-events.rules \
+ stream-events.rules \
+ tls-events.rules \
+ websocket-events.rules \
+ stun.rules

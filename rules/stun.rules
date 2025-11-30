@@ -1,0 +1,3 @@
+# Minimal STUN gate and alert rules leveraging the app-layer protocol detector.
+alert udp any any -> any any (msg:"STUN gate: Binding Request"; app-layer-protocol:stun; flow:to_server,stateless; content:"|00 01|"; depth:2; content:"|21 12 A4 42|"; offset:4; depth:4; flowbits:set,stun.gate; flowbits:noalert; sid:7720001; rev:1;)
+alert udp any any -> $HOME_NET any (msg:"Possible STUN transaction after gate"; app-layer-protocol:stun; flow:to_server,stateless; flowbits:isset,stun.gate; byte_test:2,>,0,0,relative; sid:7720002; rev:1;)

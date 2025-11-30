@@ -940,6 +940,10 @@ app-layer:
       enabled: yes
     snmp:
       enabled: yes
+    stun:
+      enabled: yes
+      detection-ports:
+        dp: 3478, 3479
     ike:
       enabled: yes
     tls:
