@@ -17,6 +17,47 @@ developed by the [OISF](https://oisf.net) and the Suricata community.
 - [Installation Guide](https://docs.suricata.io/en/latest/install.html)
 - [User Support Forum](https://forum.suricata.io)
 
+## Docker quickstart
+
+Build and run this tree inside a container with a single command using
+the provided multi-stage `Dockerfile` (debug build with Rust parsers
+enabled):
+
+```bash
+docker build -t suricata-debug .
+
+# Show version information from the built image
+docker run --rm suricata-debug -V
+
+# Run Suricata in test mode with custom rules/configuration
+docker run --rm -v "$PWD"/rules:/rules suricata-debug \
+  -T -c /etc/suricata/suricata.yaml -S /rules/stun.rules
+```
+
+Mount additional paths (PCAP files, custom configuration) as needed for
+your workflow.
+
+### STUN parser defaults and test rules
+
+The built-in STUN parser performs a lightweight probe that checks for the
+standard STUN magic cookie `0x2112A442` at bytes 4–7 and requires the first
+two bits of the packet to be zero (per RFC 5389). It registers both UDP and
+TCP parsers with default detection ports `3478` and `3479`.
+
+For quick validation or demos, you can load the provided rules file:
+
+```bash
+./src/suricata -T -c suricata.yaml \
+  --set classification-file=./etc/classification.config \
+  --set reference-config-file=./etc/reference.config \
+  --set threshold-file=./threshold.config \
+  -S rules/stun.rules
+```
+
+`rules/stun.rules` contains two sample signatures that gate on
+`app-layer-protocol:stun` and match the STUN binding request pattern
+(`|00 01|` followed by the magic cookie `|21 12 a4 42|`).
+
 ## Contributing
 
 We're happily taking patches and other contributions. Please see our

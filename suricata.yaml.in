@@ -1246,6 +1246,11 @@ app-layer:
     sip:
       #enabled: yes
 
+    stun:
+      enabled: yes
+      detection-ports:
+        dp: 3478, 3479
+
     ldap:
       tcp:
         enabled: yes

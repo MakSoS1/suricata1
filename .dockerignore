@@ -1,0 +1,16 @@
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+build
+cmake-build*
+node_modules
+target
+coverage
+*.pcap
+*.pcapng
+*.log
+*.tmp
+*.swp
+*.swo

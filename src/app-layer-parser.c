@@ -1799,6 +1799,8 @@ void AppLayerParserRegisterProtocolParsers(void)
     SCRegisterDhcpParser();
     SCRegisterSnmpParser();
     SCRegisterSipParser();
+    SCRegisterStunUdpParser();
+    SCRegisterStunTcpParser();
     SCRegisterQuicParser();
     SCRegisterWebSocketParser();
     SCRegisterLdapTcpParser();
