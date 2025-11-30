@@ -1048,6 +1048,7 @@ static void AppLayerNamesSetup(void)
     AppProtoRegisterProtoString(ALPROTO_DNP3, "dnp3");
     AppProtoRegisterProtoString(ALPROTO_NFS, "nfs");
     AppProtoRegisterProtoString(ALPROTO_NTP, "ntp");
+    AppProtoRegisterProtoString(ALPROTO_STUN, "stun");
     AppProtoRegisterProtoString(ALPROTO_FTPDATA, "ftp-data");
     AppProtoRegisterProtoString(ALPROTO_TFTP, "tftp");
     AppProtoRegisterProtoString(ALPROTO_IKE, "ike");
