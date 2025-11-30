@@ -17,6 +17,44 @@ developed by the [OISF](https://oisf.net) and the Suricata community.
 - [Installation Guide](https://docs.suricata.io/en/latest/install.html)
 - [User Support Forum](https://forum.suricata.io)
 
+## Docker quickstart for the STUN demo
+
+Use the provided multi-stage Dockerfile to build an isolated Suricata image that includes the Rust-based STUN parser and demo rules.
+
+1. Build the image:
+
+   ```bash
+   docker build -t suricata-stun .
+   ```
+
+2. Generate the STUN sample pcap (requires `scapy`, for example `python3 -m pip install scapy`):
+
+   ```bash
+   python3 qa/stun_pcap_gen.py
+   ```
+
+3. Run Suricata inside the container on the generated capture and bundled STUN rules, writing logs to a local directory:
+
+   ```bash
+   mkdir -p log-docker
+   docker run --rm \
+     -v "$(pwd)/qa/pcaps:/pcaps" \
+     -v "$(pwd)/rules:/rules" \
+     -v "$(pwd)/log-docker:/var/log/suricata" \
+     suricata-stun \
+     -r /pcaps/stun_3rules_60pkts.pcap \
+     -S /rules/stun.rules \
+     -c /etc/suricata/suricata.yaml \
+     --set default-log-dir=/var/log/suricata \
+     -l /var/log/suricata
+   ```
+
+4. Inspect the alerts (for example, fast.log) from the host:
+
+   ```bash
+   cat log-docker/fast.log
+   ```
+
 ## Contributing
 
 We're happily taking patches and other contributions. Please see our
