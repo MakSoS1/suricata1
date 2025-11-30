@@ -17,6 +17,26 @@ developed by the [OISF](https://oisf.net) and the Suricata community.
 - [Installation Guide](https://docs.suricata.io/en/latest/install.html)
 - [User Support Forum](https://forum.suricata.io)
 
+## Docker quickstart
+
+Build and run this tree inside a container with a single command using
+the provided multi-stage `Dockerfile` (debug build with Rust parsers
+enabled):
+
+```bash
+docker build -t suricata-debug .
+
+# Show version information from the built image
+docker run --rm suricata-debug -V
+
+# Run Suricata in test mode with custom rules/configuration
+docker run --rm -v "$PWD"/rules:/rules suricata-debug \
+  -T -c /etc/suricata/suricata.yaml -S /rules/stun.rules
+```
+
+Mount additional paths (PCAP files, custom configuration) as needed for
+your workflow.
+
 ## Contributing
 
 We're happily taking patches and other contributions. Please see our

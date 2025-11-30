@@ -105,6 +105,7 @@ pub mod smb;
 pub mod krb;
 pub mod dcerpc;
 pub mod modbus;
+pub mod stun;
 
 pub mod ike;
 pub mod snmp;
