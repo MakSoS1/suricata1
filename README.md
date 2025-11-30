@@ -72,6 +72,49 @@ The script mounts the pcap and rules directories, executes Suricata in the
 container, and reports total alerts along with counts per SID from the generated
 `fast.log`.
 
+## Building locally without Docker
+
+If you prefer a native build, install the build dependencies (mirroring the
+Dockerfile) and compile Suricata with Rust enabled:
+
+```bash
+sudo apt-get update && sudo apt-get install -y \
+  autoconf automake bison build-essential cargo cmake flex git \
+  libcap-ng-dev libgeoip-dev libjansson-dev libjemalloc-dev liblz4-dev \
+  liblzma-dev libmagic-dev libmaxminddb-dev libnet1-dev \
+  libnetfilter-queue-dev libnspr4-dev libnss3-dev libpcap-dev \
+  libpcre2-dev libpcre3-dev libtool-bin libunwind-dev libyaml-dev \
+  pkg-config python3 python3-pip rustc zlib1g-dev
+
+cargo install --locked cbindgen
+
+./autogen.sh
+CFLAGS="-O0 -g3" ./configure \
+  --enable-debug \
+  --enable-unittests \
+  --enable-rust \
+  --prefix=/usr/local \
+  --sysconfdir=/etc/suricata
+make -j"$(nproc)"
+sudo make install
+sudo make install-conf
+sudo ldconfig
+```
+
+To validate the STUN demo locally after building, you can generate the sample
+pcap and replay it with the bundled rules:
+
+```bash
+python3 qa/stun_pcap_gen.py
+mkdir -p log-native
+sudo /usr/local/bin/suricata -r qa/pcaps/stun_3rules_60pkts.pcap \
+  -S rules/stun.rules \
+  -c /etc/suricata/suricata.yaml \
+  --set default-log-dir=./log-native \
+  -l ./log-native
+cat log-native/fast.log
+```
+
 ## Contributing
 
 We're happily taking patches and other contributions. Please see our
