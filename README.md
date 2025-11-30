@@ -55,6 +55,23 @@ Use the provided multi-stage Dockerfile to build an isolated Suricata image that
    cat log-docker/fast.log
    ```
 
+### Automated Docker replay helper
+
+After building the image and generating the sample pcap, you can run Suricata
+inside Docker and summarize the alert counts with a single command:
+
+```bash
+python3 qa/run_stun_docker.py \
+  --image suricata-stun \
+  --pcap qa/pcaps/stun_3rules_60pkts.pcap \
+  --rules rules/stun.rules \
+  --log-dir log-docker
+```
+
+The script mounts the pcap and rules directories, executes Suricata in the
+container, and reports total alerts along with counts per SID from the generated
+`fast.log`.
+
 ## Contributing
 
 We're happily taking patches and other contributions. Please see our
