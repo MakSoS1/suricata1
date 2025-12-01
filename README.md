@@ -49,6 +49,10 @@ Use the provided multi-stage Dockerfile to build an isolated Suricata image that
      -l /var/log/suricata
    ```
 
+   The runtime image also exposes the config at `/etc/suricata/suricata/suricata.yaml`
+   for compatibility with older instructions, so either path will load the same
+   STUN-enabled configuration inside the container.
+
 4. Inspect the alerts (for example, fast.log) from the host:
 
    ```bash
@@ -70,7 +74,8 @@ python3 qa/run_stun_docker.py \
 
 The script mounts the pcap and rules directories, executes Suricata in the
 container, and reports total alerts along with counts per SID from the generated
-`fast.log`.
+`fast.log`. Use `--config /etc/suricata/suricata/suricata.yaml` if you prefer
+the compatibility path inside the container.
 
 ## Building locally without Docker
 

@@ -89,6 +89,8 @@ COPY --from=build /etc/suricata /etc/suricata
 
 # Ensure runtime directories exist
 RUN mkdir -p /var/run/suricata /var/log/suricata && \
+    mkdir -p /etc/suricata/suricata && \
+    ln -sf /etc/suricata/suricata.yaml /etc/suricata/suricata/suricata.yaml && \
     ldconfig
 
 WORKDIR /var/run/suricata

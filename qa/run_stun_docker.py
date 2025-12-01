@@ -20,6 +20,7 @@ DEFAULT_IMAGE = "suricata-stun"
 DEFAULT_PCAP = Path("qa/pcaps/stun_3rules_60pkts.pcap")
 DEFAULT_RULES = Path("rules/stun.rules")
 DEFAULT_LOG_DIR = Path("log-docker")
+DEFAULT_CONFIG = Path("/etc/suricata/suricata.yaml")
 
 
 class DockerReplayError(RuntimeError):
@@ -52,6 +53,15 @@ def parse_args() -> argparse.Namespace:
         help="Directory for Suricata logs on the host (default: %(default)s)",
     )
     parser.add_argument(
+        "--config",
+        type=Path,
+        default=DEFAULT_CONFIG,
+        help=(
+            "Path to the Suricata config inside the container (default:"
+            " %(default)s)."
+        ),
+    )
+    parser.add_argument(
         "--preserve-logs",
         action="store_true",
         help="Do not delete existing fast.log before replaying",
@@ -75,7 +85,9 @@ def clear_existing_logs(log_dir: Path, preserve: bool) -> None:
         fast_log.unlink()
 
 
-def build_docker_command(image: str, pcap: Path, rules: Path, log_dir: Path) -> list[str]:
+def build_docker_command(
+    image: str, pcap: Path, rules: Path, log_dir: Path, config: Path
+) -> list[str]:
     pcap_mount = pcap.resolve().parent
     rules_mount = rules.resolve().parent
     pcap_inside = Path("/pcaps") / pcap.name
@@ -96,7 +108,7 @@ def build_docker_command(image: str, pcap: Path, rules: Path, log_dir: Path) -> 
         "-S",
         str(rules_inside),
         "-c",
-        "/etc/suricata/suricata.yaml",
+        str(config),
         "--set",
         "default-log-dir=/var/log/suricata",
         "-l",
@@ -145,7 +157,9 @@ def main() -> None:
     args = parse_args()
     ensure_paths(args.pcap, args.rules, args.log_dir)
     clear_existing_logs(args.log_dir, args.preserve_logs)
-    command = build_docker_command(args.image, args.pcap, args.rules, args.log_dir)
+    command = build_docker_command(
+        args.image, args.pcap, args.rules, args.log_dir, args.config
+    )
     print("Running:", " ".join(command))
     run_docker_replay(command)
     counts = parse_fast_log(args.log_dir)
