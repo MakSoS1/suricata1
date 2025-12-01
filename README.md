@@ -118,6 +118,10 @@ sudo /usr/local/bin/suricata -r qa/pcaps/stun_3rules_60pkts.pcap \
   --set default-log-dir=./log-native \
   -l ./log-native
 cat log-native/fast.log
+# Expect 80 total alerts (40 for SID 7801001, 20 each for SIDs 7801002 and
+# 7801003) when running against the generated fixture:
+grep -o "\[1:[0-9]*:[0-9]*\]" log-native/fast.log | \
+  sed 's/\[1:\([0-9]*\):[0-9]*\]/\1/' | sort | uniq -c
 ```
 
 ## Contributing
